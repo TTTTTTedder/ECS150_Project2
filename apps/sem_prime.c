@@ -18,8 +18,6 @@
 
 #define MAXPRIME 1000
 
-int count = 1;
-
 struct channel {
 	int value;
 	sem_t produce;
@@ -103,8 +101,7 @@ static void sink(void *arg)
 		if (value == -1)
 			break;
 
-		printf("%d - %d is prime.\n", count, value);
-		count++;
+		printf("%d is prime.\n", value);
 
 		f = malloc(sizeof(*f));
 		f->left = p;
