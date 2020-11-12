@@ -36,27 +36,7 @@ struct uthread_tcb *uthread_current(void)
 
 void uthread_yield(void)
 {
-	/*// Get the head of the queue
-    // move the selected TCB to the end of the queue
-    // switch context into this TCB
-    struct uthread_tcb* next_thread;
-    // current_thread = threads->head;
-    // next_thread = threads->head->next;
-    // Take it from the start of queue, push it to end of queue
-    queue_dequeue(threads, (void**)&current_thread);
-	if(queue_length(threads) > 0){
-		//queue_dequeue(threads, (void**)&next_thread);
-        next_thread = queue
-		if(next_thread != NULL){
-            queue_enqueue(threads, next_thread);
-			uthread_ctx_switch(&(current_thread->ctx), &(next_thread->ctx));
-		} else {
-			perror("Nothing to yield");
-			exit(-1);
-		}
-	}
-    queue_enqueue(threads, current_thread);
-    */
+    preempt_disable();
 
     struct uthread_tcb* prev_thread = current_thread;
     if (blocked == 0) {
@@ -67,8 +47,7 @@ void uthread_yield(void)
     struct uthread_tcb* next_thread = current_thread;
     uthread_ctx_switch(&(prev_thread->ctx), &(next_thread->ctx));
 
-
-
+    preempt_enable();
 }
 
 void uthread_exit(void)
@@ -80,7 +59,7 @@ void uthread_exit(void)
 int uthread_create(uthread_func_t func, void *arg)
 {
     // First, create a TCB for thread. Set state to ready, initialize stack, initialize context
-
+    
 	struct uthread_tcb* thread = malloc(sizeof(struct uthread_tcb));
 
     if (thread == NULL) {
@@ -89,13 +68,15 @@ int uthread_create(uthread_func_t func, void *arg)
 
     thread->state = RUNNING;
     thread->stack = (char*)uthread_ctx_alloc_stack();
-
+    preempt_disable();
 	if (uthread_ctx_init(&(thread->ctx), thread->stack, func, arg) == -1) { // type conversion because function returns void*
         return -1;
     }
-
+    preempt_enable();
     // Now that the thread is set up and is ready to run, we can push it into the queue
+    preempt_disable();
     queue_enqueue(readyThreads, thread);
+    preempt_enable();
     return 0;
 }
 
@@ -110,8 +91,11 @@ int uthread_start(uthread_func_t func, void *arg)
      */
     // queue_t threads was declared as a global variable. Initialize it here
 
+    preempt_start();
+
     readyThreads = queue_create();
     waitingThreads = queue_create();
+
 	// Assign everything that a thread needs
     // Create an "idle" thread
 
@@ -126,36 +110,24 @@ int uthread_start(uthread_func_t func, void *arg)
         uthread_yield();
     }
 
-    //uthread_exit();
+    preempt_stop();
 	return 0;
 }
 
 void uthread_block(void)
 {   
+    preempt_disable();
     blocked = 1;
 	uthread_yield();
+    preempt_enable();
 }
 
 void uthread_unblock(struct uthread_tcb *uthread)
 {
-    // remove certain thread from waiting to ready
-
-    //struct uthread_tcb* cur;
-
-    /*queue_t tempQueue;
-    for(int i = 0; i < queue_length(waitingThreads); i++){
-        queue_dequeue(waitingThreads, cur);
-        if(cur == uthread){
-            queue_enqueue(readyThreads, cur);
-        } else {
-            queue_enqueue(tempQueue, cur);
-        }
-    }
-    queue_destroy(waitingThreads);
-    waitingThreads = queue_create();
-    waitingThreads = tempQueue;*/
+    preempt_disable();
     queue_enqueue(readyThreads, uthread);
     uthread_yield();
+    preempt_enable();
 }
 
 // 1 2 3 4 5 6 7

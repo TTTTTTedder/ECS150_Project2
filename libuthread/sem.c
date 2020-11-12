@@ -26,21 +26,27 @@ sem_t sem_create(size_t count)
 	}
 	sem->count = count; // define the origin semaphore count
 	sem->waiting = 0;
+	//preempt_disable();
 	sem->waitingOnSemaphore = queue_create();
+	//preempt_enable();
 	return sem;
 }
 
 int sem_destroy(sem_t sem)
 {
-	if(sem == NULL || sem->waiting != 0){ // if error
+	if(sem == NULL || queue_length(sem->waitingOnSemaphore) != 0){ // if error
 		return ERROR;
 	}
+	//preempt_disable();
+	queue_destroy(sem->waitingOnSemaphore);
+	//preempt_enable();
 	free(sem); // deallocate
 	return SUCCESS; // success
 }
 
 int sem_down(sem_t sem)
 {
+	
 	struct uthread_tcb* current_thread = uthread_current();
 	if(sem == NULL){ // if error
 		return ERROR;
@@ -51,27 +57,38 @@ int sem_down(sem_t sem)
 	
 	// question: we are decreasing the semaphore here
 	// but not sure if we should call uthread_block() here
+	preempt_disable();
 	if(sem->count > 0){
 		sem->count--;
 	} else if(sem->count == 0){
 		queue_enqueue(sem->waitingOnSemaphore, current_thread);
 		uthread_block();
 	}
+	preempt_enable();
+	
 	return SUCCESS;
 }
 
 int sem_up(sem_t sem)
 {
+	
 	if(sem == NULL){ // if error
 		return ERROR;
 	}
+	preempt_disable();
 	sem->count++;
 	if (queue_length(sem->waitingOnSemaphore) != 0) {
 		struct uthread_tcb* unblock_thread;
 		queue_dequeue(sem->waitingOnSemaphore, (void**)&unblock_thread);
 		uthread_unblock(unblock_thread);
 	}
-	// idea: increment by one, and wake up one of the waiting threads if any
+	preempt_enable();
+	
+	
+	return SUCCESS;
+}
+
+// idea: increment by one, and wake up one of the waiting threads if any
 
 	// using uthread_unblock() here?
 
@@ -83,5 +100,3 @@ int sem_up(sem_t sem)
 	// file?
 
 	// uthread_unblock();
-	return SUCCESS;
-}

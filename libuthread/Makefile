@@ -4,8 +4,8 @@ lib := libuthread.a
 all: $(lib)
 
 ## TODO: Phase 1
-$(lib): queue.o uthread.o context.o private.o sem.o
-	ar rcs $(lib) queue.o uthread.o context.o private.o sem.o
+$(lib): queue.o uthread.o context.o private.o sem.o preempt.o
+	ar rcs $(lib) queue.o uthread.o context.o private.o sem.o preempt.o
 
 queue.o: queue.c 
 	gcc  -Wall -Werror -c queue.c -o queue.o
@@ -13,6 +13,9 @@ queue.o: queue.c
 uthread.o: uthread.c
 	gcc -Wall -Werror -c uthread.c -o uthread.o
 	
+preempt.o: preempt.c
+	gcc -Wall -Werror -c preempt.c -o preempt.o
+
 context.o: context.c
 	gcc -Wall -Werror -c context.c -o context.o
 
