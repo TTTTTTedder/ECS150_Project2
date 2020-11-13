@@ -148,7 +148,7 @@ Zhengyu Wu, 916951023
       current thread to yield.
 
 
-## Test
+## Testing
 
 * ```queue_tester``` 
 
