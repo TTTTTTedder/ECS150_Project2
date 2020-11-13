@@ -167,11 +167,14 @@ int queue_iterate(queue_t queue, queue_func_t func)
 	if(queue == NULL || func == NULL || queue->length == 0){
         return ERROR;
     }
-    struct node* current = queue->head;
+    // iterate from head of the queue
+    struct node* current = queue->head; 
     struct node* temp = malloc(sizeof(struct node));
     while(current != NULL){
+        // go through each node in the queue
         temp = current;
         current = current->next;
+        // do function for each node
         func(temp->data);
     }
     temp = NULL;
