@@ -86,13 +86,17 @@ Zhengyu Wu, 916951023
 
    Semaphores are used to control access to common resources by
 
-   multiple threads. The semaphores will be controlled
+   multiple threads.
+   
+   + Structure
+   
+      Each semaphore holds a count variable and a queue to 
+      
+      represent threads that are waiting on this specific
 
-   by ```down``` and ```up``` functions. We set a queue inside the 
-
-   semaphore structure to store the order of the threads that are 
-
-   waiting the resource, in first come first serve order.
+      semaphore.
+   
+   
 
 
 
