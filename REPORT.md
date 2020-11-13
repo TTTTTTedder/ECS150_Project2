@@ -75,6 +75,12 @@ Zhengyu Wu, 916951023
       global variable to ensure all ```uthread``` functions have
       
       access to it.
+      
+   + Yielding
+      
+      Context switching occurs between the current running thread,
+      
+      and the first thread in the ready queue.
 
 * (Phase 3) **Semaphores** 
 
