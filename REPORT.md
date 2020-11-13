@@ -57,7 +57,7 @@ Zhengyu Wu, 916951023
          + Context
          
          + Stack (independent for each thread)
-    
+   
    + Current Thread
    
       Holds the currently running thread in the program. Stored 
@@ -77,7 +77,7 @@ Zhengyu Wu, 916951023
       access to it.
       
    + Yielding
-      
+     
       Context switching occurs between the current running thread,
       
       and the first thread in the ready queue.
@@ -112,17 +112,7 @@ Zhengyu Wu, 916951023
       
       the ready queue.
       
-   + ```blocked``` flag
    
-      We use a ```blocked``` global variable as a flag to help 
-      
-      enqueue the thread either into the ready queue, or a 
-      
-      semaphore specific queue, by understand whether the
-      
-      thread to be enqueued is blocked or not.
-   
-
 * (Phase 4) **Preempt** 
 
    We create a signal handler that handles the ```SIGVTALRM```
@@ -243,7 +233,7 @@ Zhengyu Wu, 916951023
     to modify our code, we are missing some prime numbers altogether.
     
 * ```test_preempt```
-    
+  
     The idea here is that we create an initial thread that creates a
     
     second thread. The initial thread attempts to keep hold of the
@@ -272,8 +262,10 @@ Zhengyu Wu, 916951023
   Since we found that we can not run the prime test perfectly at
 
   a very late time, determining whether to restructure our semaphore
-  
-  implementation is a hard task.
+
+  implementation is a hard task. Fortunately we fix this problem at the 
+
+  last minute.
 
 * Understanding how to keep track of blocked threads took some time.
 
