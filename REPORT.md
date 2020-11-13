@@ -242,6 +242,24 @@ Zhengyu Wu, 916951023
     
     to modify our code, we are missing some prime numbers altogether.
     
+* ```test_preempt```
+    
+    The idea here is that we create an initial thread that creates a
+    
+    second thread. The initial thread attempts to keep hold of the
+    
+    CPU forever by executing an infinite while loop. But since the
+    
+    ```uthread_create``` function calls the ```init``` function
+    
+    which calls the ```bootstrap``` function which finally starts
+    
+    preemption, a signal is sent every 0.01 seconds which forces
+    
+    thread 1 (the infinite loop thread) to yield and executes
+    
+    thread 2. This way, we know that our preemption works.
+    
 
 ## Challenges
 
