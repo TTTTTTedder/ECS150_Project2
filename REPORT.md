@@ -256,22 +256,29 @@ Zhengyu Wu, 916951023
     prime numbers in numeric order. However, after multiple attempts
     
     to modify our code, we are missing some prime numbers altogether.
+    
 
 ## Challenges
 
-* The first challenge we met is the yielding between threads. That's
+* The first challenge we met is understanding yielding between threads,
 
-  the part we spent most of our time to understand the requirements.
+  which we spent most of our time on.
 
-* Using semaphores in sensitive case is the second challenge we have.
+* Using semaphores in sensitive case is the second challenge we faced.
 
   Since we found that we can not run the prime test perfectly at
 
-  a very late time, it becomes really hard to determine if we should
+  a very late time, determining whether to restructure our semaphore
+  
+  implementation is a hard task.
 
-  implement our semaphores again, in anotehr way.
+* Understanding how to keep track of blocked threads took some time.
 
-* 3 ***\*EDIT HERE IF ANY\****
+  We initially thought of having two global queues for states, but
+  
+  having a queue linked to every semaphore made more sense to keep
+  
+  track of blocked threads.
 
 
 
