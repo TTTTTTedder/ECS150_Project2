@@ -16,7 +16,7 @@ Zhengyu Wu, 916951023
 
 ## Design Choices
 
-* Phase 1 **Queue** 
+* (Phase 1) **Queue** 
 
    Queue is the very basic and most important data structure in this
 
@@ -30,7 +30,7 @@ Zhengyu Wu, 916951023
 
    of this queue.
 
-* Phase 2 **Uthread** 
+* (Phase 2) **Uthread** 
 
    Thread management functions are implemented as per the interface
    
@@ -65,8 +65,18 @@ Zhengyu Wu, 916951023
       as a global variable, which is accessible by other ```c```
       
       files with the use of ```uthread_current``` function.
+      
+   + Ready Threads (queue)
+   
+      Holds the TCBs of all threads ready to run. Threads stored
+      
+      in this queue are not blocked by semaphores. This is also a
+      
+      global variable to ensure all ```uthread``` functions have
+      
+      access to it.
 
-* Phase 3 **Semaphores** 
+* (Phase 3) **Semaphores** 
 
    Semaphores are used to control access to common resources by
 
@@ -80,7 +90,7 @@ Zhengyu Wu, 916951023
 
 
 
-* Phase 4 **Preempt** 
+* (Phase 4) **Preempt** 
 
  ***EDIT HERE***
 
