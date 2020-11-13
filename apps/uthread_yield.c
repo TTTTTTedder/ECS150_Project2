@@ -9,35 +9,35 @@
  * thread2
  * thread3
  */
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-#include <unistd.h>
+
 #include <uthread.h>
 
-void Preempt_test1(void *arg)
+void thread3(void *arg)
 {
-	sleep(10);
-    printf("Print 1st\n");
-    return;
+	uthread_yield();
+	printf("thread3\n");
 }
 
-void Preempt_test2(void *arg)
+void thread2(void *arg)
 {
-    uthread_create(Preempt_test1, NULL);
-
-    printf("Print 2nd\n");
-    uthread_yield();
-    return;
+	uthread_create(thread3, NULL);
+	uthread_yield();
+	printf("thread2\n");
 }
 
-void preempt_test(void)
+void thread1(void *arg)
 {
-    uthread_start(Preempt_test2,NULL);
+	uthread_create(thread2, NULL);
+	uthread_yield();
+	printf("thread1\n");
+	uthread_yield();
 }
 
 int main(void)
 {
-	preempt_test();
+	uthread_start(thread1, NULL);
 	return 0;
 }
