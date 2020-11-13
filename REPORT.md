@@ -42,9 +42,9 @@ Zhengyu Wu, 916951023
       
       initializing an ```idle``` thread (to provide a basis for 
       
-      context switching)and linking a first thread to commence
+      context switching) and linking a first thread to commence
       
-      the threading library. Later continuous yielding ensures that
+      the threading library. Continuous yielding ensures that
       
       threads can be created/destroyed/run.
       
@@ -118,7 +118,9 @@ Zhengyu Wu, 916951023
       
       enqueue the thread either into the ready queue, or a 
       
-      semaphore specific queue. 
+      semaphore specific queue, by understand whether the
+      
+      thread to be enqueued is blocked or not.
    
 
 * (Phase 4) **Preempt** 
@@ -138,6 +140,12 @@ Zhengyu Wu, 916951023
       ```old_action```, which helps to restore the states
       
       in ```preempt_stop``` before the program ends.
+      
+   + Signal Handler
+   
+      The detection of a ```SIGVTALRM``` signal forces the
+      
+      current thread to yield.
 
 ## Execution Procedure 
 
@@ -145,7 +153,7 @@ Zhengyu Wu, 916951023
 
 + Run Single Thread
 
-+ Run Multiple Thread 
++ Run Multiple Threads
   + Yielding Between Threads 
 
   - Threads Control 
@@ -159,117 +167,115 @@ Zhengyu Wu, 916951023
 
 * ```queue_tester``` 
 
- We use the ```queue_tester``` program, we test our queue by call
-
- all the functions implemented in ```queue.c``` file. We test
-
- the basic function ```create()```, ```enqueue()```, and ```dequeue()```
-
- by simply calling them during the program. We also test the 
-
- advance functions ```delete()``` and ```iterate()``` to make sure
-
- it works perfectly. 
-
- By running this testing program, we make sure that our queue are 
-
- quality enough for further use.
+    In the ```queue_tester``` program, we test our queue by 
+    
+    calling all functions implemented in ```queue.c``` file.
+    
+    We test the basic functions ```create()```, ```enqueue()```,
+    
+    and ```dequeue()``` by simply calling them during the 
+    
+    program. We also test the more complicated functions 
+    
+    ```delete()``` and ```iterate()``` to make sure it works 
+    
+    perfectly. By running this testing program, we make sure that 
+    
+    our queue structure is soundly built for further use.
 
 * ```uthread_hello``` 
 
- This program simply creating and running a thread to print
+    This program simply creates and runs a thread to print
 
- infomation in the terminal.
+    infomation in the terminal.
 
- By using this testing program, we simply test if our thread APIs
-
- are able to be accessed, and make sure a thread can be created
-
- by calling the thread APIs.
+    By using this testing program, we simply test if our thread 
+    
+    API is able to be accessed, and make sure a thread can 
+    
+    be created by calling the thread API functions.
 
 * ```uthread_yield``` 
 
- We use this program to test the ```yield``` function in our thread
+    We use this program to test the ```yield``` function in our 
+    
+    thread API. By calling function in this program, we test if 
+    
+    current running thread is able to stop and yield to the next 
+    
+    thread waiting in the queue. 
 
- API. By calling function in this program, we test if current 
+    As it print the information with the order we expect, the 
 
- running thread is able to stop and yield to next thread waitting 
-
- in the queue. 
-
- As it print the information with the order we expect, the 
-
- ```yield()``` function is guaranteed to work well when multi-threads
-
- are running.
+    ```yield()``` function is guaranteed to work well when 
+    
+    multi-threading is taking place.
 
 * ```sem_simple``` 
 
- By using this program, we test if the semaphores we implemented in
+    By using this program, we test if the semaphores we 
+    
+    implemented in phase 3 are able to interrupt the current 
+    
+    thread and release resources to next thread.
 
- phrase 3 are able to interrupt current thread and release resources
-
- to next thread.
-
- Since it does print out information we expect, it guarantees the
-
- ```down()``` and ```up()``` functions are able to allow a thread
-
- grabbing and release resources. 
+    Since it does print out information we expect, it guarantees 
+    
+    the ```down()``` and ```up()``` functions are able to allow a 
+    
+    thread to grab and release resources.
 
 * ```sem_buffer``` 
 
- In this program, we test if the semaphores are able to work in
-
- complicate case. The consumer-producer like test cases let us able 
-
- to know if the semaphores are able to limit only one thread uses
-
- the same resources at a time.
+    In this program, we test if the semaphores are able to work 
+    
+    in complicated case. The consumer-producer like test cases lets 
+    
+    us know if the semaphores are able to limit only one 
+    
+    thread to use the same resource at a time.
 
 * ```sem_count``` 
 
- In this program, we test the synchronization of two threads sharing
-
- two semaphores. Since it counts and prints from 0 to 19 in 
-
- numeric order, our semaphores are proved to work for synchronization.
+    In this program, we test the synchronization of two threads 
+    
+    sharing two semaphores. Since it counts and prints from 0 to 19 
+    
+    in numeric order, our semaphores are proved to work for 
+    
+    synchronization.
 
 * ```sem_prime```
 
- We use this program to test if our semaphores are able to work in
+    We use this program to test if our semaphores are able to work 
+    
+    in a sensitive case. In expectation, our semaphores should help 
 
- a sensitive case. In expectation, our semaphores should help 
-
- controlling threads during processing and print out all the prime 
-
- numbers in numeric order. However, even we have tried our best
-
- to modificate our code, it still has some error when running this
-
- test. 
+    control threads during processing and print out all the 
+    
+    prime numbers in numeric order. However, after multiple attempts
+    
+    to modify our code, we are missing some prime numbers altogether.
 
 ## Challenges
 
 * The first challenge we met is the yielding between threads. That's
 
- the part we spent most of our time to understand the requirements.
+  the part we spent most of our time to understand the requirements.
 
 * Using semaphores in sensitive case is the second challenge we have.
 
- Since we found that we can not run the prime test perfectly at
+  Since we found that we can not run the prime test perfectly at
 
- a very late time, it becomes really hard to determine if we should
+  a very late time, it becomes really hard to determine if we should
 
- implement our semaphores again, in anotehr way.
+  implement our semaphores again, in anotehr way.
 
 * 3 ***\*EDIT HERE IF ANY\****
 
 
 
-## Source 
-
-
+## Sources
 
 [Leetcode 707. Design Linked List](https://leetcode.com/problems/design-linked-list/) 
 
