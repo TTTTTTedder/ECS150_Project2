@@ -8,19 +8,19 @@ Zhengyu Wu, 916951023
 
 ## Purpose
 
-The goal of this project is to implement a basic user-level thread
+   The goal of this project is to implement a basic user-level thread
 
-library for Linux, which provides a complete interface for applications
+   library for Linux, which provides a complete interface for applications
 
-to create and run independent threads concurrently.
+   to create and run independent threads concurrently.
 
 ## Design Choices
 
-* phrase 1 **Queue** 
+* Phase 1 **Queue** 
 
    Queue is the very basic and most important data structure in this
 
-   project. We choose to implement the queue by designing a 
+   project. We chose to implement the queue by designing a 
 
    linked-list with the FIFO (First In First Out) rule. 
 
@@ -30,11 +30,43 @@ to create and run independent threads concurrently.
 
    of this queue.
 
-* phrase 2 **Uthread** 
+* Phase 2 **Uthread** 
 
- ***EDIT HERE***
+   Thread management functions are implemented as per the interface
+   
+   provided.
+   
+   + ```idle``` thread
+   
+      Acts as a starting point for the multithreading process, by
+      
+      initializing an ```idle``` thread (to provide a basis for 
+      
+      context switching)and linking a first thread to commence
+      
+      the threading library. Later continuous yielding ensures that
+      
+      threads can be created/destroyed/run.
+      
+   +  TCB
+   
+      Every thread is initialized with the following blocks of
+      
+      information:
+      
+         + Context
+         
+         + Stack (independent for each thread)
+    
+   + Current Thread
+   
+      Holds the currently running thread in the program. Stored 
+      
+      as a global variable, which is accessible by other ```c```
+      
+      files with the use of ```uthread_current``` function.
 
-* phrase 3 **Semaphores** 
+* Phase 3 **Semaphores** 
 
    Semaphores are used to control access to common resources by
 
@@ -48,10 +80,9 @@ to create and run independent threads concurrently.
 
 
 
-* phrase 4 **Preempt** 
+* Phase 4 **Preempt** 
 
  ***EDIT HERE***
-
 
 
 ## Execution Procedure 
