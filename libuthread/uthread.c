@@ -10,7 +10,7 @@
 #include "uthread.h"
 #include "queue.h"
 
-int blocked = 0;
+// int blocked = 0;
 struct uthread_tcb {
     uthread_ctx_t ctx; // context for the thread. We will set context during thread creation
     char* stack; // We will initialize this during thread creation
@@ -28,21 +28,19 @@ void uthread_yield(void) {
     preempt_disable();
 
     struct uthread_tcb* prev_thread = current_thread;
-    if (blocked == 0) {
-        queue_enqueue(readyThreads, current_thread);
-    }
-    blocked = 0;
+    queue_enqueue(readyThreads, current_thread);
     queue_dequeue(readyThreads, (void**)&current_thread); // Get next thread into current_thread
     struct uthread_tcb* next_thread = current_thread; // Assign next thread as dequeue'd thread
-    preempt_enable();
     uthread_ctx_switch(&(prev_thread->ctx), &(next_thread->ctx));
 }
 
 void uthread_exit(void) {
     preempt_disable();
     uthread_ctx_destroy_stack(current_thread->stack);
-	free(current_thread);
-	uthread_yield();
+    struct uthread_tcb* prev_thread = current_thread;
+    queue_dequeue(readyThreads, (void**)&current_thread);
+    struct uthread_tcb* next_thread = current_thread;
+    uthread_ctx_switch(&(prev_thread->ctx), &(next_thread->ctx));
 }
 
 int uthread_create(uthread_func_t func, void *arg) {
@@ -99,9 +97,11 @@ int uthread_start(uthread_func_t func, void *arg) {
 
 void uthread_block(void) {
     preempt_disable();
-    blocked = 1;
-	uthread_yield();
-    preempt_enable();
+    // blocked = 1;
+    struct uthread_tcb* prev_thread = current_thread;
+    queue_dequeue(readyThreads, (void**)&current_thread); // Get next thread into current_thread
+    struct uthread_tcb* next_thread = current_thread; // Assign next thread as dequeue'd thread
+    uthread_ctx_switch(&(prev_thread->ctx), &(next_thread->ctx));
 }
 
 void uthread_unblock(struct uthread_tcb *uthread) {
