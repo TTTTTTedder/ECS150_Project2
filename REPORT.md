@@ -18,17 +18,17 @@ to create and run independent threads concurrently.
 
 * phrase 1 **Queue** 
 
- Queue is the very basic and most important data structure in this
+   Queue is the very basic and most important data structure in this
 
- project. We choose to implement the queue by designing a 
+   project. We choose to implement the queue by designing a 
 
- linked-list with the FIFO (First In First Out) rule. 
+   linked-list with the FIFO (First In First Out) rule. 
 
- Thus, every new node we enqueue will be linked to the tail of 
+   Thus, every new node we enqueue will be linked to the tail of 
 
- the current queue, and we can only dequeue the node from the head
+   the current queue, and we can only dequeue the node from the head
 
- of this queue.
+   of this queue.
 
 * phrase 2 **Uthread** 
 
@@ -36,15 +36,15 @@ to create and run independent threads concurrently.
 
 * phrase 3 **Semaphores** 
 
- Semaphores are used to control access to common resources by
+   Semaphores are used to control access to common resources by
 
- multiple threads. The semaphores will be controlled
+   multiple threads. The semaphores will be controlled
 
- by ```down``` and ```up``` functions. We set a queue inside the 
+   by ```down``` and ```up``` functions. We set a queue inside the 
 
- semaphore structure to store the order of the threads that are 
+   semaphore structure to store the order of the threads that are 
 
- waiting the resource, in first come first serve order.
+   waiting the resource, in first come first serve order.
 
 
 
