@@ -13,33 +13,31 @@
  * Frequency of preemption
  * 100Hz is 100 times per second
  */
+
 #define HZ 100
 #define microseconds 1000000
- 
+
 // global variable so that preempt_start and preempt_stop can access it
 struct sigaction new_action, old_action;
 struct itimerval old_timer, new_timer;
 
-void handler(int signum){
-	// handling somethin
+void handler(int signum) {
 	if (signum == SIGVTALRM) {
 		uthread_yield();
 	}
-	
+
 	return;
-} 
+}
 
 
-void preempt_disable(void)
-{
+void preempt_disable(void) {
 	sigset_t block_alarm;
 	sigemptyset(&block_alarm);
 	sigaddset(&block_alarm, SIGVTALRM);
 	sigprocmask(SIG_BLOCK, &block_alarm, NULL);
 }
 
-void preempt_enable(void)
-{
+void preempt_enable(void) {
 	sigset_t unblock_alarm;
 	sigemptyset(&unblock_alarm);
 	sigaddset(&unblock_alarm, SIGVTALRM);
@@ -51,12 +49,10 @@ void preempt_enable(void)
  * Configure a timer that must fire a virtual alarm at a frequency of 100 Hz and
  * setup a timer handler that forcefully yields the currently running thread.
  */
-void preempt_start(void)
-{
+void preempt_start(void) {
 	// Idea:
 	// Every 100 Hz (by alarm), write a handler that calls uthread_yield
 
-	
 	new_action.sa_handler = handler;
 	sigemptyset(&new_action.sa_mask);
 	new_action.sa_flags = 0;
@@ -73,7 +69,6 @@ void preempt_start(void)
 	// There are 1000000 microseconds in a second
 	// to get 0.01 seconds, divide 1000000/100 (microseconds / HZ)
 
-	
 	new_timer.it_interval.tv_usec = microseconds / HZ;
   	new_timer.it_interval.tv_sec = 0; // Don't have whole number of seconds
   	new_timer.it_value.tv_usec = microseconds / HZ;
@@ -84,15 +79,16 @@ void preempt_start(void)
 		exit(1);
 	}
 
+    return;
 }
+
 /*
  * preempt_stop - Stop thread preemption
  *
  * Restore previous timer configuration, and previous action associated to
  * virtual alarm signals.
  */
-void preempt_stop(void)
-{
+void preempt_stop(void) {
 	if (sigaction(SIGVTALRM, &old_action, NULL) == -1) {
 		perror("sigaction");
 		exit(1);

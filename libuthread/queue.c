@@ -11,7 +11,7 @@
  * @data: item data in each node
  * @next: node pointer points to next node
  */
-struct node{
+struct node {
     void* data;
     struct node* next;
 };
@@ -22,17 +22,16 @@ struct node{
  * @tail: tail pointed points to the last element in queue
  * @length: queue length
  */
-struct queue{
+struct queue {
     struct node* head;
     struct node* tail;
     int length;
 };
 
-queue_t queue_create(void)
-{
+queue_t queue_create(void) {
     // Allocate an empty queue
     struct queue* newQueue = malloc(sizeof(struct queue));
-	
+
     // failure when allocating the new queue
     if(newQueue == NULL){
         return NULL;
@@ -48,8 +47,7 @@ queue_t queue_create(void)
     return newQueue;
 }
 
-int queue_destroy(queue_t queue)
-{
+int queue_destroy(queue_t queue) {
     // queue is NULL or is not empty
     if(queue == NULL || queue->length > 0){
         return ERROR;
@@ -57,12 +55,9 @@ int queue_destroy(queue_t queue)
     // deallocate the memory associated to the queue object
     free(queue);
     return SUCCESS;
-
-
 }
 
-int queue_enqueue(queue_t queue, void *data)
-{
+int queue_enqueue(queue_t queue, void *data) {
     // if queue or data are NULL
     if(queue == NULL || data == NULL){
         return ERROR;
@@ -74,7 +69,7 @@ int queue_enqueue(queue_t queue, void *data)
     }
     newNode->data = data;
     newNode->next = NULL;
-    
+
     if(queue->length == 0){//empty queue
         queue->head = newNode;
         queue->tail = newNode;
@@ -86,8 +81,7 @@ int queue_enqueue(queue_t queue, void *data)
     return SUCCESS;
 }
 
-int queue_dequeue(queue_t queue, void **data)
-{
+int queue_dequeue(queue_t queue, void **data) {
     // if queue or data are NULL or if queue is empty
 	if(queue == NULL || data == NULL || queue->length == 0){
         return ERROR;
@@ -114,8 +108,7 @@ int queue_dequeue(queue_t queue, void **data)
 }
 
 
-int queue_delete(queue_t queue, void *data)
-{
+int queue_delete(queue_t queue, void *data) {
 	// queue ore data are NULL
     if(queue == NULL || data == NULL || queue->length == 0){
         return ERROR;
@@ -135,10 +128,10 @@ int queue_delete(queue_t queue, void *data)
                     queue->head = NULL;
                     queue->tail = NULL;
                     free(current); // deallocate the goal data in queue
-                
+
                 } else if(queue->length > 1) { // more than one elements in the queue
                     queue->length--;
-                    
+
                     current = queue->head->next;// deallocate the goal data in queueQ
                     queue->head = NULL;
                     queue->head = current;
@@ -159,16 +152,14 @@ int queue_delete(queue_t queue, void *data)
         return ERROR;
     }
     return SUCCESS;
-
 }
 
-int queue_iterate(queue_t queue, queue_func_t func)
-{
+int queue_iterate(queue_t queue, queue_func_t func) {
 	if(queue == NULL || func == NULL || queue->length == 0){
         return ERROR;
     }
     // iterate from head of the queue
-    struct node* current = queue->head; 
+    struct node* current = queue->head;
     struct node* temp = malloc(sizeof(struct node));
     while(current != NULL){
         // go through each node in the queue
@@ -180,13 +171,9 @@ int queue_iterate(queue_t queue, queue_func_t func)
     temp = NULL;
     free(temp);
     return SUCCESS;
-
-
-
 }
 
-int queue_length(queue_t queue)
-{
+int queue_length(queue_t queue) {
 	if(queue == NULL){
         return ERROR;
     }
