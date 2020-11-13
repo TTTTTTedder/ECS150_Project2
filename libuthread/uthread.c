@@ -112,8 +112,7 @@ int uthread_start(uthread_func_t func, void *arg)
     while (queue_length(readyThreads) != 0) {
         uthread_yield();
     }
-    queue_destroy(readyThreads);
-    queue_destroy(waitingThreads);
+
     preempt_stop();
 	return 0;
 }
@@ -130,6 +129,6 @@ void uthread_unblock(struct uthread_tcb *uthread)
 {
     preempt_disable();
     queue_enqueue(readyThreads, uthread);
-    // uthread_yield();
+    uthread_yield();
     preempt_enable();
 }
