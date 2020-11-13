@@ -54,17 +54,3 @@ int main(void)
 
 	return 0;
 }
-
-// sem1 = 0 {}
-// sem2 = 0 {}
-// sem3 = 0 {}
-
-// current_thread 
-// ready_queue   
-
-// prev_thread = 2
-// next_thread = 3
-
-// print thread 3
-// print thread 2
-// print thread 1
