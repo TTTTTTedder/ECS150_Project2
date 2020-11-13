@@ -95,15 +95,49 @@ Zhengyu Wu, 916951023
       represent threads that are waiting on this specific
 
       semaphore.
+      
+   + ```sem_down()```
    
+      Decrements the semaphore count if non-zero. If the count
+      
+      is zero, push the thread onto the semaphore's queue and
+      
+      block the thread.
+      
+   + ```sem_up()```
    
-
-
+      Increments the semaphore count. If there is a thread
+      
+      waiting on the semaphore, unblock the thread to
+      
+      the ready queue.
+      
+   + ```blocked``` flag
+   
+      We use a ```blocked``` global variable as a flag to help 
+      
+      enqueue the thread either into the ready queue, or a 
+      
+      semaphore specific queue. 
+   
 
 * (Phase 4) **Preempt** 
 
- ***EDIT HERE***
-
+   We create a signal handler that handles the ```SIGVTALRM```
+   
+   signal. We also create a timer alarm that signals the
+   
+   ```SIGVTALRM``` every 100Hz (every 0.01 seconds).
+   
+   + Signal Catcher
+   
+      The signal catcher ```sigaction``` performs on a 
+      
+      ```new_action``` and stores the current action in
+      
+      ```old_action```, which helps to restore the states
+      
+      in ```preempt_stop``` before the program ends.
 
 ## Execution Procedure 
 
