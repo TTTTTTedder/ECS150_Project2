@@ -147,21 +147,6 @@ Zhengyu Wu, 916951023
       
       current thread to yield.
 
-## Execution Procedure 
-
-+ Create Threads Queue
-
-+ Run Single Thread
-
-+ Run Multiple Threads
-  + Yielding Between Threads 
-
-  - Threads Control 
-  - Grab Resource Semaphore
-  - Release Resource Semaphore
-  - Preemption 
-
-
 
 ## Test
 
