@@ -4,7 +4,7 @@
 #include "queue.h"
 #include "sem.h"
 #include "private.h"
-#include "uthread.h" // Added by Zhengyu
+#include "uthread.h"
 
 #define ERROR -1;
 #define SUCCESS 0;
@@ -46,8 +46,7 @@ int sem_destroy(sem_t sem)
 
 int sem_down(sem_t sem)
 {
-	
-	struct uthread_tcb* current_thread = uthread_current();
+	// struct uthread_tcb* current_thread = uthread_current();
 	if(sem == NULL){ // if error
 		return ERROR;
 	}
@@ -58,12 +57,19 @@ int sem_down(sem_t sem)
 	// question: we are decreasing the semaphore here
 	// but not sure if we should call uthread_block() here
 	preempt_disable();
-	if(sem->count > 0){
-		sem->count--;
-	} else if(sem->count == 0){
+	// if(sem->count > 0){
+	// 	sem->count --;
+	// } else if(sem->count == 0){
+	// 	queue_enqueue(sem->waitingOnSemaphore, current_thread);
+	// 	uthread_block();
+	// }
+	while(sem->count == 0){
+		struct uthread_tcb* current_thread = uthread_current();
 		queue_enqueue(sem->waitingOnSemaphore, current_thread);
 		uthread_block();
 	}
+	sem->count --;
+
 	preempt_enable();
 	
 	return SUCCESS;

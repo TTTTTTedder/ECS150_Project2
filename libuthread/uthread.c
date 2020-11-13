@@ -15,8 +15,8 @@
 #define READY 2
 #define EXITED 3
 
-int blocked = 0;
 
+int blocked = 0;
 struct uthread_tcb {
 	int state; // states are described above
     uthread_ctx_t ctx; // context for the thread. We will set context during thread creation
@@ -45,13 +45,16 @@ void uthread_yield(void)
     blocked = 0;
     queue_dequeue(readyThreads, (void**)&current_thread);
     struct uthread_tcb* next_thread = current_thread;
-    uthread_ctx_switch(&(prev_thread->ctx), &(next_thread->ctx));
-
     preempt_enable();
+    uthread_ctx_switch(&(prev_thread->ctx), &(next_thread->ctx));
+    
+    
 }
 
 void uthread_exit(void)
 {
+    preempt_disable();
+    uthread_ctx_destroy_stack(current_thread->stack);
 	free(current_thread);
 	uthread_yield();
 }
@@ -109,7 +112,8 @@ int uthread_start(uthread_func_t func, void *arg)
     while (queue_length(readyThreads) != 0) {
         uthread_yield();
     }
-
+    queue_destroy(readyThreads);
+    queue_destroy(waitingThreads);
     preempt_stop();
 	return 0;
 }
@@ -126,21 +130,6 @@ void uthread_unblock(struct uthread_tcb *uthread)
 {
     preempt_disable();
     queue_enqueue(readyThreads, uthread);
-    uthread_yield();
+    // uthread_yield();
     preempt_enable();
 }
-
-// 1 2 3 4 5 6 7
-// target 5
-// 2 3 4 5 6 7 | temp =1
-// 3 4 5 6 7 | temmp = 1 2
-// ...
-// 5 6 7 | temp = 1 2 3 4
-// take out 5
-// 6 7 |temp =1 2 3 4 
-// temp = 1 2 3 4 6 7
-// waiting.dequeue(elements left)
-// queue.delete(waitingThread)
-// queue create (waiting thread)
-// waitingThread = temp
-// O(n)
