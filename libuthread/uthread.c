@@ -10,7 +10,7 @@
 #include "uthread.h"
 #include "queue.h"
 
-// int blocked = 0;
+
 struct uthread_tcb {
     uthread_ctx_t ctx; // context for the thread. We will set context during thread creation
     char* stack; // We will initialize this during thread creation
@@ -97,7 +97,6 @@ int uthread_start(uthread_func_t func, void *arg) {
 
 void uthread_block(void) {
     preempt_disable();
-    // blocked = 1;
     struct uthread_tcb* prev_thread = current_thread;
     queue_dequeue(readyThreads, (void**)&current_thread); // Get next thread into current_thread
     struct uthread_tcb* next_thread = current_thread; // Assign next thread as dequeue'd thread
