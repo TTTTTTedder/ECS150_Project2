@@ -19,7 +19,6 @@ sem_t sem_create(size_t count) {
 		return NULL;
 	}
 	sem->count = count; // define the origin semaphore count
-	sem->waiting = 0;
 	sem->waitingOnSemaphore = queue_create();
 	return sem;
 }
