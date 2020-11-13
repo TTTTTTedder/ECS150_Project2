@@ -54,7 +54,6 @@ int uthread_create(uthread_func_t func, void *arg) {
         return -1;
     }
 
-    thread->state = RUNNING;
     thread->stack = (char*)uthread_ctx_alloc_stack();
     preempt_disable();
 	if (uthread_ctx_init(&(thread->ctx), thread->stack, func, arg) == -1) { // type conversion because function returns void*
